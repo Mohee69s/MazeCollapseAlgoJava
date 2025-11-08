@@ -13,5 +13,16 @@ public class Tile {
         this.health = health;
         this.end = end;
     }
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tile)) return false;
+        Tile p = (Tile) o;
+        return x == p.x && y == p.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * x + y;
+    }
 }
