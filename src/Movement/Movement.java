@@ -2,10 +2,7 @@ package Movement;
 
 import Maze.MazeStruct;
 import Maze.Tile;
-import Player.Player;
-
 import java.awt.*;
-import java.util.HashMap;
 
 public class Movement {
     public static boolean CanMoveUp(MazeStruct mazeStruct){

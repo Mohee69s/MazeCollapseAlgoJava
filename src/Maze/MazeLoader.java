@@ -20,7 +20,6 @@ public class MazeLoader {
                 for (int x = 0; x < parts.length; x++) {
                     String token = parts[x].trim();
 
-                    // skip empty
                     if (token.equals("X") || token.equals(".")) continue;
 
                     String[] fields = token.split(":");
@@ -37,7 +36,6 @@ public class MazeLoader {
                     Tile tile = new Tile(cost, health, end, hasKey, locked);
                     maze.put(new Point(x, y), tile);
 
-                    // if player tile
                     if (type.equals("P")) {
                         player = new Player(x, y);
                     }
