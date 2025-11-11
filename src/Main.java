@@ -11,8 +11,6 @@ void main() throws IOException {
             break;
         }
         else if(mazeStruct.CheckWinCondition()==null) {
-
-
             Scanner scanner = new Scanner(System.in);
             char choice = scanner.next().charAt(0);
             if (choice == 'w') {

@@ -10,13 +10,4 @@ public class Player {
         this.x = x;
         this.y = y;
     }
-    public Player(){}
-    public void AquireKey(Tile tile){
-        this.keys+=1;
-        tile.hasKey=false;
-    }
-    public void OpenLock(Tile tile){
-        this.keys-=1;
-        tile.unlock();
-    }
 }

@@ -42,7 +42,7 @@ public class Movement {
         }
     }
     public static boolean CanMoveLeft(MazeStruct mazeStruct ){
-        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y+1));
+        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x-1,mazeStruct.player.y));
         if (tile==null || tile.health==0){
             return false;
         }

@@ -3,7 +3,11 @@ package Maze;
 import Player.Player;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
+import Movement.Movement;
 
 public class MazeStruct {
     public HashMap<Point,Tile> maze;
@@ -87,45 +91,47 @@ public class MazeStruct {
         return java.util.Objects.hash(maze, height, width, player.x, player.y);
     }
 
-    public java.util.List<MazeStruct> generateNextStates() {
-        java.util.List<MazeStruct> nextStates = new java.util.ArrayList<>();
+
+    public List<MazeStruct> generateNextStates() {
+        List<MazeStruct> nextStates = new ArrayList<>();
         int[][] directions = {
                 {0, -1},
                 {0, 1},
                 {-1, 0},
                 {1, 0}
         };
-
         for (int[] dir : directions) {
             int newX = player.x + dir[0];
             int newY = player.y + dir[1];
             Point newPoint = new Point(newX, newY);
+
             Tile target = maze.get(newPoint);
-
-            if (target != null && target.health > 0 && !target.locked) {
-
-                HashMap<Point, Tile> mazeCopy = new HashMap<>();
-                for (java.util.Map.Entry<Point, Tile> entry : maze.entrySet()) {
-                    Tile t = entry.getValue();
-                    mazeCopy.put(entry.getKey(), new Tile(t.cost, t.health, t.end, t.hasKey, t.locked));
-                }
-
-                Player newPlayer = new Player(newX, newY);
-                newPlayer.keys = player.keys;
-
-
-                Tile movedTile = mazeCopy.get(newPoint);
-                if (movedTile.hasKey) {
-                    movedTile.hasKey = false;
-                    newPlayer.keys += 1;
-                }
-
-                movedTile.health = Math.max(0, movedTile.health - 1);
-
-                MazeStruct nextState = new MazeStruct(mazeCopy, height, width, newPlayer);
-                nextStates.add(nextState);
+            if (target == null || target.health == 0) continue;
+            boolean canMove = false;
+            if (!target.locked) {
+                canMove = true;
+            } else if (target.locked && player.keys > 0) {
+                canMove = true;
             }
+
+            if (!canMove) continue;
+            HashMap<Point, Tile> mazeCopy = new HashMap<>();
+            for (Map.Entry<Point, Tile> entry : maze.entrySet()) {
+                Tile t = entry.getValue();
+                mazeCopy.put(entry.getKey(), new Tile(t.cost, t.health, t.end, t.hasKey, t.locked));
+            }
+            Player newPlayer = new Player(player.x, player.y);
+            newPlayer.keys = player.keys;
+            MazeStruct tempMaze = new MazeStruct(mazeCopy, height, width, newPlayer);
+            MazeStruct nextState = null;
+            if (dir[0] == 0 && dir[1] == -1) nextState = Movement.MoveUp(tempMaze);
+            else if (dir[0] == 0 && dir[1] == 1) nextState = Movement.MoveDown(tempMaze);
+            else if (dir[0] == -1 && dir[1] == 0) nextState = Movement.MoveLeft(tempMaze);
+            else if (dir[0] == 1 && dir[1] == 0) nextState = Movement.MoveRight(tempMaze);
+
+            if (nextState != null) nextStates.add(nextState);
         }
+
         return nextStates;
     }
 
