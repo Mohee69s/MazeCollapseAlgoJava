@@ -15,17 +15,22 @@ public class Tile {
     }
     public void unlock(){
         this.locked = false;
-        return;
     }
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof Tile)) return false;
-//        Tile p = (Tile) o;
-//        return x == p.x && y == p.y;
-//
-//    @Override
-//    public int hashCode() {
-//        return 31 * x + y;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tile)) return false;
+        Tile t = (Tile) o;
+        return cost == t.cost &&
+                health == t.health &&
+                end == t.end &&
+                hasKey == t.hasKey &&
+                locked == t.locked;
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(cost, health, end, hasKey, locked);
+    }
+
 }

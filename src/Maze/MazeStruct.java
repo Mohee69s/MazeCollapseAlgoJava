@@ -31,9 +31,9 @@ public class MazeStruct {
                 Tile tile = maze.get(p);
 
                 if (player.x == x && player.y == y) {
-                    sb.append("P "); // player
+                    sb.append("P ");
                 } else if (tile == null || tile.health==0) {
-                    sb.append("X "); // void / empty
+                    sb.append("X ");
                 } else if (tile.end) {
                     sb.append("E ");
                 } else if (tile.hasKey) {
@@ -69,4 +69,65 @@ public class MazeStruct {
         }
         return winCondition;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MazeStruct)) return false;
+        MazeStruct other = (MazeStruct) o;
+        return height == other.height &&
+                width == other.width &&
+                player.x == other.player.x &&
+                player.y == other.player.y &&
+                java.util.Objects.equals(maze, other.maze);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(maze, height, width, player.x, player.y);
+    }
+
+    public java.util.List<MazeStruct> generateNextStates() {
+        java.util.List<MazeStruct> nextStates = new java.util.ArrayList<>();
+        int[][] directions = {
+                {0, -1},
+                {0, 1},
+                {-1, 0},
+                {1, 0}
+        };
+
+        for (int[] dir : directions) {
+            int newX = player.x + dir[0];
+            int newY = player.y + dir[1];
+            Point newPoint = new Point(newX, newY);
+            Tile target = maze.get(newPoint);
+
+            if (target != null && target.health > 0 && !target.locked) {
+
+                HashMap<Point, Tile> mazeCopy = new HashMap<>();
+                for (java.util.Map.Entry<Point, Tile> entry : maze.entrySet()) {
+                    Tile t = entry.getValue();
+                    mazeCopy.put(entry.getKey(), new Tile(t.cost, t.health, t.end, t.hasKey, t.locked));
+                }
+
+                Player newPlayer = new Player(newX, newY);
+                newPlayer.keys = player.keys;
+
+
+                Tile movedTile = mazeCopy.get(newPoint);
+                if (movedTile.hasKey) {
+                    movedTile.hasKey = false;
+                    newPlayer.keys += 1;
+                }
+
+                movedTile.health = Math.max(0, movedTile.health - 1);
+
+                MazeStruct nextState = new MazeStruct(mazeCopy, height, width, newPlayer);
+                nextStates.add(nextState);
+            }
+        }
+        return nextStates;
+    }
+
+
 }
