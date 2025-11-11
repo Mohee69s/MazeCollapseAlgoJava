@@ -8,121 +8,121 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class Movement {
-    public static boolean CanMoveUp(HashMap<Point,Tile> maze,Player player ){
-        Tile tile = maze.get(new Point(player.x,player.y+1));
+    public static boolean CanMoveUp(MazeStruct mazeStruct){
+        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y-1));
         if (tile==null  || tile.health==0){
             return false;
         }
         if(tile.locked){
-            return player.keys > 0;
+            return mazeStruct.player.keys > 0;
         }
         else {
             return true;
         }
     }
-    public static boolean CanMoveDown(HashMap<Point,Tile> maze,Player player ){
-        Tile tile = maze.get(new Point(player.x,player.y-1));
+    public static boolean CanMoveDown(MazeStruct mazeStruct ){
+        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y+1));
         if (tile==null || tile.health==0){
             return false;
         }
         if(tile.locked){
-            return player.keys < 0;
+            return mazeStruct.player.keys < 0;
         }
         else {
             return true;
         }
     }
-    public static boolean CanMoveRight(HashMap<Point,Tile> maze,Player player ){
-        Tile tile = maze.get(new Point(player.x+1,player.y));
+    public static boolean CanMoveRight(MazeStruct mazeStruct ){
+        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x+1,mazeStruct.player.y));
         if (tile==null || tile.health==0){
             return false;
         }
         if(tile.locked){
-            return player.keys > 0;
+            return mazeStruct.player.keys > 0;
         }
         else {
             return true;
         }
     }
-    public static boolean CanMoveLeft(HashMap<Point,Tile> maze,Player player ){
-        Tile tile = maze.get(new Point(player.x,player.y+1));
+    public static boolean CanMoveLeft(MazeStruct mazeStruct ){
+        Tile tile = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y+1));
         if (tile==null || tile.health==0){
             return false;
         }
         if(tile.locked){
-            return player.keys < 0;
+            return mazeStruct.player.keys < 0;
         }
         else {
             return true;
         }
     }
-    public static MazeStruct MoveUp(HashMap<Point,Tile> maze, Player player ){
-        Tile next = maze.get(new Point(player.x,player.y+1));
-        Tile current = maze.get(new Point(player.x,player.y));
+    public static MazeStruct MoveUp(MazeStruct mazeStruct ){
+        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y-1));
+        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
         current.health--;
-        if(next.locked && player.keys>0){
-            player.keys--;
+        if(next.locked && mazeStruct.player.keys>0){
+            mazeStruct.player.keys--;
             next.unlock();
-            player.y+=1;
         }
         if(!next.locked){
-            player.y+=1;
+            mazeStruct.player.y-=1;
         }
         if (next.hasKey){
-            player.keys++;
+            mazeStruct.player.keys++;
+            next.hasKey=false;
         }
-        return new MazeStruct(maze,player);
+        return new MazeStruct(mazeStruct.maze,mazeStruct.height, mazeStruct.width, mazeStruct.player);
     }
-    public static MazeStruct MoveDown(HashMap<Point,Tile> maze, Player player ){
-        Tile next = maze.get(new Point(player.x,player.y-1));
-        Tile current = maze.get(new Point(player.x,player.y));
-        current.health++;
-        if(next.locked && player.keys>0){
-            player.keys--;
-            next.unlock();
-            player.y-=1;
-        }
-        if(!next.locked){
-            player.y-=1;
-        }
-        if (next.hasKey){
-            player.keys++;
-        }
-        return new MazeStruct(maze,player);
-    }
-    public static MazeStruct MoveRight(HashMap<Point,Tile> maze, Player player ){
-        Tile next = maze.get(new Point(player.x+1,player.y));
-        Tile current = maze.get(new Point(player.x,player.y));
-        current.health++;
-        if(next.locked && player.keys>0){
-            player.keys--;
-            next.unlock();
-            player.x+=1;
-        }
-        if(!next.locked){
-            player.x+=1;
-        }
-        if (next.hasKey){
-            player.keys++;
-        }
-        return new MazeStruct(maze,player);
-    }
-    public static MazeStruct MoveLeft(HashMap<Point,Tile> maze, Player player ){
-        Tile next = maze.get(new Point(player.x-1,player.y));
-        Tile current = maze.get(new Point(player.x,player.y));
+    public static MazeStruct MoveDown(MazeStruct mazeStruct){
+        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y+1));
+        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
         current.health--;
-        if(next.locked && player.keys>0) {
-            player.keys--;
+        if(next.locked && mazeStruct.player.keys>0){
+            mazeStruct.player.keys--;
             next.unlock();
-            player.x-=1;
         }
         if(!next.locked){
-            player.x-=1;
+            mazeStruct.player.y+=1;
         }
         if (next.hasKey){
-            player.keys++;
+            mazeStruct.player.keys++;
+            next.hasKey=false;
         }
-        return new MazeStruct(maze,player);
+        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
+    }
+    public static MazeStruct MoveRight(MazeStruct mazeStruct ){
+        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x+1,mazeStruct.player.y));
+        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        current.health--;
+        if(next.locked && mazeStruct.player.keys>0){
+            mazeStruct.player.keys--;
+            next.unlock();
+        }
+        if(!next.locked){
+            mazeStruct.player.x+=1;
+        }
+        if (next.hasKey){
+            mazeStruct.player.keys++;
+            next.hasKey=false;
+        }
+        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
+    }
+    public static MazeStruct MoveLeft(MazeStruct mazeStruct ){
+        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x-1,mazeStruct.player.y));
+        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        current.health--;
+        if(next.locked && mazeStruct.player.keys>0) {
+            mazeStruct.player.keys--;
+            next.unlock();
+        }
+        if(!next.locked){
+            mazeStruct.player.x-=1;
+        }
+        if (next.hasKey){
+            mazeStruct.player.keys++;
+            next.hasKey=false;
+        }
+        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
     }
 }
 

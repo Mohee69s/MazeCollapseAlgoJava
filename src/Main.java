@@ -1,13 +1,57 @@
 import Maze.MazeLoader;
 import Maze.MazeStruct;
+import Movement.Movement;
 
-import java.io.IOException;
+void main() throws IOException {
+    MazeStruct mazeStruct = MazeLoader.loadFromFile("/home/mohee/IdeaProjects/MazeCollapseAlgoJava/src/test.txt");
 
-public class Main  {
-    public static void main(String[] args) throws IOException {
-        MazeStruct maze = MazeLoader.loadFromFile("/home/mohee/IdeaProjects/MazeCollapseAlgoJava/src/test.txt");
-        System.out.println(maze);
+    IO.println(mazeStruct);
+    while (true) {
+        if(mazeStruct.CheckWinCondition()){
+            System.out.println("\uD83D\uDC51 You've won! \uD83D\uDC51 ");
+        }
 
+        Scanner scanner = new Scanner(System.in);
+        char choice = scanner.next().charAt(0);
+        if (choice == 'w') {
+            if (!Movement.CanMoveUp(mazeStruct)) {
+                IO.println("You can't move up");
+                IO.println(mazeStruct);
+            } else {
+                mazeStruct = Movement.MoveUp(mazeStruct);
+                IO.println(mazeStruct);
+            }
+        } else if (choice == 's') {
+            if (!Movement.CanMoveDown(mazeStruct)) {
+                IO.println("You can't move down");
+                IO.println(mazeStruct);
+            } else {
+                mazeStruct = Movement.MoveDown(mazeStruct);
+                IO.println(mazeStruct);
+            }
+        } else if (choice == 'a') {
+            if (!Movement.CanMoveLeft(mazeStruct)) {
+                IO.println("You can't move left");
+                IO.println(mazeStruct);
+            } else {
+                mazeStruct = Movement.MoveLeft(mazeStruct);
+                IO.println(mazeStruct);
+            }
+        } else if (choice == 'd') {
+            if (!Movement.CanMoveRight(mazeStruct)) {
+                IO.println("You can't move right");
+                IO.println(mazeStruct);
+            } else {
+                mazeStruct = Movement.MoveRight(mazeStruct);
+                IO.println(mazeStruct);
+            }
+        }
+        else {
+            System.out.println("Invalid choice");
+            System.out.println(mazeStruct);
+        }
 
     }
+
+
 }

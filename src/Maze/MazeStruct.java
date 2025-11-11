@@ -32,7 +32,7 @@ public class MazeStruct {
 
                 if (player.x == x && player.y == y) {
                     sb.append("P "); // player
-                } else if (tile == null) {
+                } else if (tile == null || tile.health==0) {
                     sb.append("X "); // void / empty
                 } else if (tile.end) {
                     sb.append("E ");
@@ -51,5 +51,22 @@ public class MazeStruct {
         return sb.toString();
     }
 
-
+    public Boolean CheckWinCondition() {
+        Boolean winCondition = null;
+        Point p = new Point(player.x,player.y);
+        Tile tile = maze.get(p);
+        if (tile.end) {
+            for(Tile t: maze.values()){
+                if(t.end){
+                    continue;
+                } else if (t.health>0) {
+                    winCondition = false;
+                    return winCondition;
+                }
+            }
+            winCondition = true;
+            return winCondition;
+        }
+        return winCondition;
+    }
 }
