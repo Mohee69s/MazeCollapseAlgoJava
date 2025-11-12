@@ -1,5 +1,7 @@
 package Maze;
 
+import static java.util.Objects.hash;
+
 public class Tile {
     public int cost;
     public int health;
@@ -30,7 +32,7 @@ public class Tile {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(cost, health, end, hasKey, locked);
+        return hash(cost, health, end, hasKey, locked);
     }
 
 }

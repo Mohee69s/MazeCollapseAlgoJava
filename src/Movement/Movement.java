@@ -54,72 +54,76 @@ public class Movement {
         }
     }
     public static MazeStruct MoveUp(MazeStruct mazeStruct ){
-        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y-1));
-        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        MazeStruct copiedMaze = new MazeStruct(mazeStruct);
+        Tile next = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y-1));
+        Tile current = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y));
         current.health--;
-        if(next.locked && mazeStruct.player.keys>0){
-            mazeStruct.player.keys--;
+        if(next.locked && copiedMaze.player.keys>0){
+            copiedMaze.player.keys--;
             next.unlock();
         }
         if(!next.locked){
-            mazeStruct.player.y-=1;
+            copiedMaze.player.y-=1;
         }
         if (next.hasKey){
-            mazeStruct.player.keys++;
+            copiedMaze.player.keys++;
             next.hasKey=false;
         }
-        return new MazeStruct(mazeStruct.maze,mazeStruct.height, mazeStruct.width, mazeStruct.player);
+        return copiedMaze;
     }
     public static MazeStruct MoveDown(MazeStruct mazeStruct){
-        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y+1));
-        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        MazeStruct copiedMaze = new MazeStruct(mazeStruct);
+        Tile next = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y+1));
+        Tile current = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y));
         current.health--;
-        if(next.locked && mazeStruct.player.keys>0){
-            mazeStruct.player.keys--;
+        if(next.locked && copiedMaze.player.keys>0){
+            copiedMaze.player.keys--;
             next.unlock();
         }
         if(!next.locked){
-            mazeStruct.player.y+=1;
+            copiedMaze.player.y+=1;
         }
         if (next.hasKey){
-            mazeStruct.player.keys++;
+            copiedMaze.player.keys++;
             next.hasKey=false;
         }
-        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
+        return copiedMaze;
     }
     public static MazeStruct MoveRight(MazeStruct mazeStruct ){
-        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x+1,mazeStruct.player.y));
-        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        MazeStruct copiedMaze = new MazeStruct(mazeStruct);
+        Tile next = copiedMaze.maze.get(new Point(copiedMaze.player.x+1,copiedMaze.player.y));
+        Tile current = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y));
         current.health--;
-        if(next.locked && mazeStruct.player.keys>0){
-            mazeStruct.player.keys--;
+        if(next.locked && copiedMaze.player.keys>0){
+            copiedMaze.player.keys--;
             next.unlock();
         }
         if(!next.locked){
-            mazeStruct.player.x+=1;
+            copiedMaze.player.x+=1;
         }
         if (next.hasKey){
-            mazeStruct.player.keys++;
+            copiedMaze.player.keys++;
             next.hasKey=false;
         }
-        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
+        return copiedMaze;
     }
     public static MazeStruct MoveLeft(MazeStruct mazeStruct ){
-        Tile next = mazeStruct.maze.get(new Point(mazeStruct.player.x-1,mazeStruct.player.y));
-        Tile current = mazeStruct.maze.get(new Point(mazeStruct.player.x,mazeStruct.player.y));
+        MazeStruct copiedMaze = new MazeStruct(mazeStruct);
+        Tile next = copiedMaze.maze.get(new Point(copiedMaze.player.x-1,copiedMaze.player.y));
+        Tile current = copiedMaze.maze.get(new Point(copiedMaze.player.x,copiedMaze.player.y));
         current.health--;
-        if(next.locked && mazeStruct.player.keys>0) {
-            mazeStruct.player.keys--;
+        if(next.locked && copiedMaze.player.keys>0) {
+            copiedMaze.player.keys--;
             next.unlock();
         }
         if(!next.locked){
-            mazeStruct.player.x-=1;
+            copiedMaze.player.x-=1;
         }
         if (next.hasKey){
-            mazeStruct.player.keys++;
+            copiedMaze.player.keys++;
             next.hasKey=false;
         }
-        return new MazeStruct(mazeStruct.maze,mazeStruct.height,mazeStruct.width,mazeStruct.player);
+        return copiedMaze;
     }
 }
 

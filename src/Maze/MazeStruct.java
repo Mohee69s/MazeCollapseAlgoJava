@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import Movement.Movement;
+import java.util.Objects;
+import static java.util.Objects.hash;
 
 public class MazeStruct {
     public HashMap<Point,Tile> maze;
     public int height;
     public int width;
     public Player player;
+    public MazeStruct parent;
     public MazeStruct(HashMap<Point,Tile> maze, int height, int width ,Player player) {
         this.maze=maze;
         this.height=height;
@@ -23,6 +26,14 @@ public class MazeStruct {
     public MazeStruct(HashMap<Point,Tile> maze,Player player) {
         this.maze=maze;
         this.player=player;
+    }
+
+    public MazeStruct(MazeStruct original) {
+        this.maze=original.maze;
+        this.height=original.height;
+        this.width=original.width;
+        this.player=original.player;
+        this.parent=original;
     }
 
     @Override
@@ -51,7 +62,6 @@ public class MazeStruct {
             sb.append("\n");
         }
 
-        sb.append("\nPlayer keys: ").append(player.keys);
         return sb.toString();
     }
 
@@ -88,9 +98,8 @@ public class MazeStruct {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(maze, height, width, player.x, player.y);
+        return hash(maze, height, width, player.x, player.y);
     }
-
 
     public List<MazeStruct> generateNextStates() {
         List<MazeStruct> nextStates = new ArrayList<>();
@@ -110,7 +119,7 @@ public class MazeStruct {
             boolean canMove = false;
             if (!target.locked) {
                 canMove = true;
-            } else if (target.locked && player.keys > 0) {
+            } else if (player.keys > 0) {
                 canMove = true;
             }
 
