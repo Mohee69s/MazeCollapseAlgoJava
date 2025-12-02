@@ -3,13 +3,13 @@ package Maze;
 import Player.Player;
 
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 import Movement.Movement;
-
+import java.util.Objects;
+import static java.util.Objects.hash;
 
 public class MazeStruct {
     public HashMap<Point,Tile> maze;
@@ -91,107 +91,22 @@ public class MazeStruct {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        return deepEquals(this, o, new IdentityHashMap<>());
+        if (!(o instanceof MazeStruct)) return false;
+        MazeStruct other = (MazeStruct) o;
+        return height == other.height &&
+                width == other.width &&
+                player.x == other.player.x &&
+                player.y == other.player.y &&
+                java.util.Objects.equals(maze, other.maze);
     }
-    private static boolean deepEquals(Object a, Object b, IdentityHashMap<Object, Boolean> visited) {
-        if (a == b) return true;
-        if (a == null || b == null) return false;
-
-        // Prevent cycles
-        if (visited.containsKey(a) && visited.containsKey(b)) {
-            return true;
-        }
-        visited.put(a, true);
-        visited.put(b, true);
-
-        Class<?> clsA = a.getClass();
-        Class<?> clsB = b.getClass();
-        if (!clsA.equals(clsB)) return false;
-
-        // ---- Primitive wrappers / Strings / enums ----
-        if (clsA.isPrimitive()
-                || a instanceof String
-                || a instanceof Number
-                || a instanceof Boolean
-                || a instanceof Character
-                || a instanceof Enum<?>) {
-            return a.equals(b);
-        }
-
-        // ---- Arrays ----
-        if (clsA.isArray()) {
-            int lenA = Array.getLength(a);
-            int lenB = Array.getLength(b);
-            if (lenA != lenB) return false;
-            for (int i = 0; i < lenA; i++) {
-                if (!deepEquals(Array.get(a, i), Array.get(b, i), visited)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // ---- Iterable (List, Set, etc.) ----
-        if (a instanceof Iterable<?> itA && b instanceof Iterable<?> itB) {
-            var iterA = itA.iterator();
-            var iterB = itB.iterator();
-            while (iterA.hasNext() && iterB.hasNext()) {
-                if (!deepEquals(iterA.next(), iterB.next(), visited)) {
-                    return false;
-                }
-            }
-            return !iterA.hasNext() && !iterB.hasNext();
-        }
-
-        // ---- Map ----
-        if (a instanceof Map<?, ?> mapA && b instanceof Map<?, ?> mapB) {
-            if (mapA.size() != mapB.size()) return false;
-
-            for (var entryA : mapA.entrySet()) {
-                Object keyA = entryA.getKey();
-                Object valA = entryA.getValue();
-
-                // Find matching entry in B
-                boolean found = false;
-                for (var entryB : mapB.entrySet()) {
-                    if (deepEquals(keyA, entryB.getKey(), visited)) {
-                        if (!deepEquals(valA, entryB.getValue(), visited)) {
-                            return false;
-                        }
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) return false;
-            }
-            return true;
-        }
-
-        // ---- Custom objects (deep compare all fields) ----
-        for (Field f : clsA.getDeclaredFields()) {
-            f.setAccessible(true);
-            try {
-                Object valA = f.get(a);
-                Object valB = f.get(b);
-                if (!deepEquals(valA, valB, visited)) {
-                    return false;
-                }
-            } catch (Exception ignored) {}
-        }
-        return true;
-    }
-
 
     @Override
     public int hashCode() {
-        return deepHash(this, new IdentityHashMap<>());
+        return hash(maze, height, width, player.x, player.y);
     }
 
-
-    public HashSet<MazeStruct> generateNextStates() {
-        HashSet<MazeStruct> nextStates = new HashSet<>();
+    public List<MazeStruct> generateNextStates() {
+        List<MazeStruct> nextStates = new ArrayList<>();
         int[][] directions = {
                 {0, -1},
                 {0, 1},
@@ -231,62 +146,6 @@ public class MazeStruct {
         }
 
         return nextStates;
-    }
-    private static int deepHash(Object obj, Map<Object, Boolean> visited) {
-        if (obj == null) return 0;
-
-        // Avoid infinite recursion (cycles in parent/child graphs)
-        if (visited.containsKey(obj)) return 0;
-        visited.put(obj, true);
-
-        Class<?> cls = obj.getClass();
-
-        // ---- Primitive wrappers, String, enums ----
-        if (cls.isPrimitive()
-                || obj instanceof String
-                || obj instanceof Number
-                || obj instanceof Boolean
-                || obj instanceof Character
-                || obj instanceof Enum<?>) {
-            return obj.hashCode();
-        }
-
-        // ---- Arrays ----
-        if (cls.isArray()) {
-            int len = Array.getLength(obj);
-            int h = 1;
-            for (int i = 0; i < len; i++)
-                h = 31 * h + deepHash(Array.get(obj, i), visited);
-            return h;
-        }
-
-        // ---- Collection ----
-        if (obj instanceof Iterable<?> it) {
-            int h = 1;
-            for (Object o : it)
-                h = 31 * h + deepHash(o, visited);
-            return h;
-        }
-
-        // ---- Map ----
-        if (obj instanceof Map<?, ?> map) {
-            int h = 1;
-            for (var entry : map.entrySet()) {
-                h = 31 * h + deepHash(entry.getKey(), visited);
-                h = 31 * h + deepHash(entry.getValue(), visited);
-            }
-            return h;
-        }
-
-        // ---- Custom object: hash all fields ----
-        int h = 1;
-        for (Field f : cls.getDeclaredFields()) {
-            f.setAccessible(true);
-            try {
-                h = 31 * h + deepHash(f.get(obj), visited);
-            } catch (Exception ignored) {}
-        }
-        return h;
     }
 
 
