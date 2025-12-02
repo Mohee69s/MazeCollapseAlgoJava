@@ -36,6 +36,10 @@ public class MazeStruct {
         this.parent=original;
     }
 
+    public MazeStruct() {
+
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
