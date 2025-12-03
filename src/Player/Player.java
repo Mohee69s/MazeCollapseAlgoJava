@@ -5,6 +5,7 @@ import Maze.Tile;
 public class Player {
     public int x;
     public int y;
+    public int currentCost;
     public int keys;
     public Player(int x,int y) {
         this.x = x;

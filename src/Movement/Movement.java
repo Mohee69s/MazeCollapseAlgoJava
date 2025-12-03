@@ -69,6 +69,7 @@ public class Movement {
             copiedMaze.player.keys++;
             next.hasKey=false;
         }
+        copiedMaze.player.currentCost+=next.cost;
         return copiedMaze;
     }
     public static MazeStruct MoveDown(MazeStruct mazeStruct){
@@ -87,6 +88,7 @@ public class Movement {
             copiedMaze.player.keys++;
             next.hasKey=false;
         }
+        copiedMaze.player.currentCost+=next.cost;
         return copiedMaze;
     }
     public static MazeStruct MoveRight(MazeStruct mazeStruct ){
@@ -105,6 +107,7 @@ public class Movement {
             copiedMaze.player.keys++;
             next.hasKey=false;
         }
+        copiedMaze.player.currentCost+=next.cost;
         return copiedMaze;
     }
     public static MazeStruct MoveLeft(MazeStruct mazeStruct ){
@@ -123,6 +126,7 @@ public class Movement {
             copiedMaze.player.keys++;
             next.hasKey=false;
         }
+        copiedMaze.player.currentCost+=next.cost;
         return copiedMaze;
     }
 }

@@ -1,63 +1,33 @@
 package Algorithm;
 
-import Maze.MazeLoader;
-import Maze.MazeStruct;
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.Stack;
+import java.util.PriorityQueue;
+import Maze.MazeStruct;
 
 public class MazeSolver {
-    HashSet<MazeStruct> visited = new HashSet<>();
-    int vis = 0;
-    static int gen1 = 0;
+    public PriorityQueue<MazeStruct> openSet;
+    public HashSet<MazeStruct> visited = new HashSet<>();
+    public PriorityQueue<MazeStruct> initMazeSolver(MazeStruct mazeStruct) {
 
-    public static Stack<MazeStruct> generatedStates(MazeStruct mazeStruct){
-        HashSet<MazeStruct> generatedEachStep;
-        Stack<MazeStruct> generated = new Stack<>();
-        generatedEachStep = mazeStruct.generateNextStates();
-        for (MazeStruct m : generatedEachStep){
-            generated.push(m);
-            gen1+=1;
+        openSet = new PriorityQueue<>();
+        if (mazeStruct.CheckWinCondition() != null && mazeStruct.CheckWinCondition() == true) {
+            openSet.add(mazeStruct);
+            return openSet;
         }
-        return generated;
-    }
-
-
-    public HashSet<MazeStruct> DFSLogic(Stack<MazeStruct> generatedMazes){
-        MazeStruct m;
-        while(!generatedMazes.isEmpty()){
-            m=generatedMazes.pop();
-            if(visited.contains(m)) {
-                continue;
-            }else {
-                vis += 1;
-                visited.add(m);
-                System.out.println(m);
-
-                if (m.CheckWinCondition() != null && m.CheckWinCondition()) {
-                    System.out.println("Generated: " + gen1);
-                    System.out.println("Visited: " + vis);
-                    return visited;
-                }
-                DFSLogic(generatedStates (m));
-            }
-    }
-        return null;
-
-//
-//        MazeStruct m;
-//        while (!generatedMazes.isEmpty()){
-//            m=generatedMazes.pop();
-//            if ()
-//        }
-//
-    }
-    public void InitDFSInShaaAllah(MazeStruct mazeStruct){
-        Stack<MazeStruct> stack = new Stack<>();
-        HashSet<MazeStruct>  gen= mazeStruct.generateNextStates();
-        for (MazeStruct m : gen){
-            stack.push(m);
+        if (visited.contains(mazeStruct)) {
+            return null;
         }
-        DFSLogic(stack);
-}
+        else {
+        openSet.add(mazeStruct);
+        visited.add(mazeStruct);
+        }
+        HashSet<MazeStruct> nextStates = new HashSet<>();
+        nextStates = mazeStruct.generateNextStates();
+        for (MazeStruct maze : nextStates) {
+            initMazeSolver(maze);
+        }
+        return openSet;
+    }
+
+    
 }

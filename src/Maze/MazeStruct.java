@@ -6,17 +6,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import Movement.Movement;
-import java.util.Objects;
 import static java.util.Objects.hash;
 
-public class MazeStruct {
+public class MazeStruct implements Comparable<MazeStruct>{
     public HashMap<Point,Tile> maze;
     public int height;
     public int width;
     public Player player;
     public MazeStruct parent;
+    public int cost;
     public MazeStruct(HashMap<Point,Tile> maze, int height, int width ,Player player) {
         this.maze=maze;
         this.height=height;
@@ -73,19 +74,24 @@ public class MazeStruct {
         Boolean winCondition = null;
         Point p = new Point(player.x,player.y);
         Tile tile = maze.get(p);
-        if (tile.end) {
-            for(Tile t: maze.values()){
-                if(t.end){
-                    continue;
-                } else if (t.health>0) {
-                    winCondition = false;
-                    return winCondition;
-                }
-            }
-            winCondition = true;
-            return winCondition;
+//        if (tile.end) {
+//            for(Tile t: maze.values()){
+//                if(t.end){
+//                    return true;
+//                } else if (t.health>0) {
+//                    winCondition = false;
+//                    return winCondition;
+//                }
+//            }
+//            winCondition = true;
+//            return winCondition;
+//        }
+//        return winCondition;
+        if (tile.end){
+            return true;
         }
-        return winCondition;
+        return null;
+
     }
 
     @Override
@@ -105,8 +111,8 @@ public class MazeStruct {
         return hash(maze, height, width, player.x, player.y);
     }
 
-    public List<MazeStruct> generateNextStates() {
-        List<MazeStruct> nextStates = new ArrayList<>();
+    public HashSet<MazeStruct> generateNextStates() {
+        HashSet<MazeStruct> nextStates = new HashSet<>();
         int[][] directions = {
                 {0, -1},
                 {0, 1},
@@ -128,6 +134,7 @@ public class MazeStruct {
             }
 
             if (!canMove) continue;
+            player.currentCost+= target.cost;
             HashMap<Point, Tile> mazeCopy = new HashMap<>();
             for (Map.Entry<Point, Tile> entry : maze.entrySet()) {
                 Tile t = entry.getValue();
@@ -146,6 +153,25 @@ public class MazeStruct {
         }
 
         return nextStates;
+    }
+    public int AssignTotalCost(){
+        for(Tile t : this.maze.values()){
+            this.cost+=t.cost;
+        }
+        return this.cost;
+    }
+    public int GetTotalCost(){
+        int x=0;
+        for(Tile t : this.maze.values()){
+            x+=t.cost;
+        }
+        return x;
+    }
+
+
+    @Override
+    public int compareTo(MazeStruct mazeStruct) {
+        return (this.cost-this.player.currentCost) -(mazeStruct.cost - mazeStruct.player.currentCost);
     }
 
 
