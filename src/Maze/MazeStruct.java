@@ -134,7 +134,6 @@ public class MazeStruct implements Comparable<MazeStruct>{
             }
 
             if (!canMove) continue;
-            player.currentCost+= target.cost;
             HashMap<Point, Tile> mazeCopy = new HashMap<>();
             for (Map.Entry<Point, Tile> entry : maze.entrySet()) {
                 Tile t = entry.getValue();
@@ -142,6 +141,7 @@ public class MazeStruct implements Comparable<MazeStruct>{
             }
             Player newPlayer = new Player(player.x, player.y);
             newPlayer.keys = player.keys;
+            newPlayer.currentCost = player.currentCost; // Copy parent's cost
             MazeStruct tempMaze = new MazeStruct(mazeCopy, height, width, newPlayer);
             MazeStruct nextState = null;
             if (dir[0] == 0 && dir[1] == -1) nextState = Movement.MoveUp(tempMaze);

@@ -2,23 +2,28 @@ import Algorithm.MazeSolver;
 import Maze.MazeLoader;
 import Maze.MazeStruct;
 import Movement.Movement;
+import java.util.List;
 
 void main() throws IOException {
-    MazeStruct mazeStruct = MazeLoader.loadFromFile("testreq1.txt");
+    MazeStruct mazeStruct = MazeLoader.loadFromFile("testreq2.txt");
+    IO.println("Initial Maze:");
     IO.println(mazeStruct);
-//    for (MazeStruct maze : mazeStruct.generateNextStates()){
-//        System.out.println(maze);
-//        System.out.println('\n');
-//    }
-    
-    // Display menu
-
-    PriorityQueue<MazeStruct> openSet;
     MazeSolver mazeSolver = new MazeSolver();
-    openSet = mazeSolver.initMazeSolver(mazeStruct);
-    for(MazeStruct maze : openSet){
-        System.out.println(maze);
-        System.out.println('\n');
+    MazeStruct solution = mazeSolver.uniformCostSearch(mazeStruct);
+    
+    if (solution != null) {
+        List<MazeStruct> path = mazeSolver.reconstructPath(solution);
+        
+        System.out.println("\n=== Path Taken ===");
+        for (int i = 0; i < path.size(); i++) {
+            System.out.println("Step " + i + ":");
+            System.out.println(path.get(i));
+            System.out.println();
+        }
+        
+        System.out.println("=== Final Cost: " + solution.player.currentCost + " ===");
+    } else {
+        System.out.println("No solution found!");
     }
 
     // System.out.println("\n=== Maze Solver ===");
